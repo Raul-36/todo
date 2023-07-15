@@ -17,14 +17,16 @@ using System.Windows.Shapes;
 
 namespace todo_WPF;
 
+using System.IO;
 using System.Runtime.CompilerServices;
+using System.Text.Json;
 using ToDo;
 
 public partial class MainWindow : Window, INotifyPropertyChanged
 {
 
     public event PropertyChangedEventHandler? PropertyChanged;
-    public ObservableCollection<Task> Tasks { get; set; } = new ObservableCollection<Task>();
+    public ObservableCollection<Task> Tasks { get; set; }
 
     private Task selectedTask;
     public Task SelectedTask
@@ -36,6 +38,7 @@ public partial class MainWindow : Window, INotifyPropertyChanged
 
     public MainWindow()
     {
+        this.Tasks = new ObservableCollection<Task>(this.LoadTasks());
         this.DataContext = this;
         InitializeComponent();
     }
@@ -51,7 +54,8 @@ public partial class MainWindow : Window, INotifyPropertyChanged
     private void OpenAddWindow(object sender, RoutedEventArgs e)
     {
         new AddTaskWindow(this.Tasks).ShowDialog();
-        
+        this.SaveTasks();
+
     }
     private void OpenInfoWindow(object sender, RoutedEventArgs e)
     {
@@ -66,12 +70,27 @@ public partial class MainWindow : Window, INotifyPropertyChanged
         {
             this.SelectedTask.RaiseStatus();
             MessageBox.Show($"The status of task \"{SelectedTask.Name}\" has been upgraded to {SelectedTask.Status}");
+            this.SaveTasks();
         }
 
    }
     private void DeleteSelectedTask(object sender, RoutedEventArgs e)
     {
-        if(SelectedTask != null)
+        if (SelectedTask != null)
+        {
             this.Tasks.Remove(SelectedTask);
+            this.SaveTasks();
+        }
+    }
+    private IEnumerable<Task> LoadTasks()
+    {
+        string filePath = "Data/Tasks.json";
+        var tasks = JsonSerializer.Deserialize<IEnumerable<Task>>(File.ReadAllText(filePath));
+        return tasks;
+    }
+    private void SaveTasks()
+    {
+        string filePath = "Data/Tasks.json";
+        File.WriteAllText(filePath, JsonSerializer.Serialize(this.Tasks));
     }
 }

@@ -5,11 +5,17 @@ namespace ToDo
 {
     public class Task
     {
-        public readonly string Name;
-        public readonly string Description;
-        public TaskStatus Status { get; private set; }
-        [JsonIgnore]
-        public string ShortInfo => $"{this.Name}: {this.Status}"; 
+       
+        public  string Name;
+        
+        public  string Description;
+        public TaskStatus Status { get;  set; }
+        
+        public string ShortInfo => $"{this.Name}: {this.Status}";
+        public Task()
+        {
+            
+        }
         public Task(string name, string description)
         {
             this.Name = name;

@@ -8,4 +8,15 @@
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
+	<ItemGroup>
+		<None Remove="Data\Tasks.json" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<EmbeddedResource Include="Data\Tasks.json">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</EmbeddedResource>
+	</ItemGroup>
+
+
 </Project>
