@@ -18,7 +18,12 @@
                 <ColumnDefinition Width="500*"/>
                 <ColumnDefinition Width="175*"/>
             </Grid.ColumnDefinitions>
-            
+            <StackPanel Grid.Column="1" Orientation="Horizontal">
+                <CheckBox x:Name="notStartedCheckBox" Content="NotStarted" IsChecked="True"/>
+                <CheckBox x:Name="inProgressdCheckBox" Content="InProgress" IsChecked="True"/>
+                <CheckBox x:Name="CompletedCheckBox" Content="Completed" IsChecked="True"/>
+            </StackPanel>
+            <Button Grid.Column="2" Content="Filter out" Click="Update" Margin="10"/>
         </Grid>
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
@@ -27,7 +32,7 @@
                 <ColumnDefinition Width="50*"/>
             </Grid.ColumnDefinitions>
             <ListView Grid.Column="1"
-                ItemsSource="{Binding Tasks}"
+                ItemsSource="{Binding OTasks}"
                   SelectedItem="{Binding SelectedTask}"
                   MouseDoubleClick="OpenInfoWindow">
                 <ListView.ItemTemplate>

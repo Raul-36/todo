@@ -26,7 +26,12 @@ public partial class MainWindow : Window, INotifyPropertyChanged
 {
 
     public event PropertyChangedEventHandler? PropertyChanged;
-    public ObservableCollection<Task> Tasks { get; set; }
+
+
+    public List<Task> tasks { get; set; }
+
+    private ObservableCollection<Task> oTasks;
+    public ObservableCollection<Task> OTasks { get => oTasks; set=> this.PropertyChangeMethod(out this.oTasks, value); }
 
     private Task selectedTask;
     public Task SelectedTask
@@ -38,8 +43,10 @@ public partial class MainWindow : Window, INotifyPropertyChanged
 
     public MainWindow()
     {
-        this.Tasks = new ObservableCollection<Task>(this.LoadTasks());
+        this.tasks = new List<Task>(this.LoadTasks());
         this.DataContext = this;
+       this.OTasks = new ObservableCollection<Task>(tasks);
+
         InitializeComponent();
     }
     protected void PropertyChangeMethod<T>(out T field, T value, [CallerMemberName] string propName = "")
@@ -53,9 +60,9 @@ public partial class MainWindow : Window, INotifyPropertyChanged
 
     private void OpenAddWindow(object sender, RoutedEventArgs e)
     {
-        new AddTaskWindow(this.Tasks).ShowDialog();
+        new AddTaskWindow(this.tasks).ShowDialog();
         this.SaveTasks();
-
+        this.FilterOut();
     }
     private void OpenInfoWindow(object sender, RoutedEventArgs e)
     {
@@ -71,6 +78,7 @@ public partial class MainWindow : Window, INotifyPropertyChanged
             this.SelectedTask.RaiseStatus();
             MessageBox.Show($"The status of task \"{SelectedTask.Name}\" has been upgraded to {SelectedTask.Status}");
             this.SaveTasks();
+            this.FilterOut();
         }
 
    }
@@ -78,8 +86,9 @@ public partial class MainWindow : Window, INotifyPropertyChanged
     {
         if (SelectedTask != null)
         {
-            this.Tasks.Remove(SelectedTask);
+            this.tasks.Remove(SelectedTask);
             this.SaveTasks();
+            this.FilterOut();
         }
     }
     private IEnumerable<Task> LoadTasks()
@@ -91,6 +100,26 @@ public partial class MainWindow : Window, INotifyPropertyChanged
     private void SaveTasks()
     {
         string filePath = "Data/Tasks.json";
-        File.WriteAllText(filePath, JsonSerializer.Serialize(this.Tasks));
+        File.WriteAllText(filePath, JsonSerializer.Serialize(this.tasks));
     }
+    private void Update(object sender, RoutedEventArgs e)
+    {
+        this.FilterOut();
+    }
+    private void FilterOut()
+    {
+        TasksFilter filter = new TasksFilter();
+        if (this.notStartedCheckBox.IsChecked.Value)
+            filter.AddFilter(TasksFilter.NotStarted);
+
+        if (this.inProgressdCheckBox.IsChecked.Value)
+            filter.AddFilter(TasksFilter.InProgress);
+
+        if (this.CompletedCheckBox.IsChecked.Value)
+            filter.AddFilter(TasksFilter.Completed);
+
+        this.OTasks = new ObservableCollection<Task>(this.tasks.Where(task => filter.CheckTask(task)));
+    }
+
+   
 }

@@ -10,7 +10,7 @@ namespace ToDo
         
         public  string Description;
         public TaskStatus Status { get;  set; }
-        
+        [JsonIgnore]
         public string ShortInfo => $"{this.Name}: {this.Status}";
         public Task()
         {

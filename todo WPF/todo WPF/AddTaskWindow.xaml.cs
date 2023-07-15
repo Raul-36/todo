@@ -22,7 +22,7 @@ namespace todo_WPF;
 public partial class AddTaskWindow : Window, INotifyPropertyChanged
 {
     public event PropertyChangedEventHandler? PropertyChanged;
-    private readonly ObservableCollection<ToDo.Task> tasks;
+    private readonly List<ToDo.Task> tasks;
 
     private string? newTaskName;
     public string? NewTaskName
@@ -46,7 +46,7 @@ public partial class AddTaskWindow : Window, INotifyPropertyChanged
         this.DataContext = this;
     }
 
-    public AddTaskWindow(ObservableCollection<ToDo.Task> tasks) : this()
+    public AddTaskWindow(List<ToDo.Task> tasks) : this()
     {
         this.tasks = tasks;
     }
