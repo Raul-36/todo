@@ -1,0 +1,24 @@
+﻿<Window x:Class="todo_WPF.AddTaskWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:todo_WPF"
+        mc:Ignorable="d"
+        Title="Add Window" Height="250" Width="400">
+    <DockPanel>
+
+        <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right" Background="Gray">
+            <Button Content="Add" Width="100" Click="AddTaskClick"/>
+        </StackPanel>
+        <StackPanel DockPanel.Dock="Top">
+            <Label Content="Name: "/>
+            <TextBox Text="{Binding  NewTaskName}"/>
+
+            <Label Content="Description: "/>
+            <TextBox Text="{Binding  NewTaskDescription}"/>
+            
+        </StackPanel>
+        
+    </DockPanel>
+</Window>
